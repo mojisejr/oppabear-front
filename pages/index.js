@@ -1,37 +1,22 @@
 import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
-import { useState } from "react";
-import { useRouter } from "next/router";
+import { useReadRaws } from "../blockchain/aggregates/read.raw";
+import { useApprove } from "../blockchain/aggregates/approve.token";
 
 function Home() {
-  const [t, setT] = useState(false);
-  const router = useRouter();
-  const { address } = useAccount();
+  const [selectedHost, setSelectedHost] = useState(0);
+  const [selectedStimulus, setSelectedStimulus] = useState(0);
+  const { address, isConnected } = useAccount();
+  const { hostData, stimulusData, isError, isLoading } = useReadRaws(address);
+  // const { approveHost, approveStimulus } = useApprove(
+  //   selectedHost,
+  //   selectedStimulus
+  // );
 
-  // function toSuccessPage() {
-  //   router.push("/success");
-  // }
-
-  // function toFailedPage() {
-  //   router.push("/failed");
-  // }
-
-  function Verify() {
-    try {
-      router.push("/success");
-    } catch (e) {
-      router.push("/failed");
-    }
-    // if (t) {
-    //   //api
-    //   toSuccessPage();
-    // } else {
-    //   toFailedPage();
-    // }
-  }
   return (
     <div className="">
       <Head>
@@ -40,9 +25,53 @@ function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>{address}</div>
-      {/* <ConnectButton label="Connect ME!!" accountStatus="address" /> */}
-      <button onClick={() => setT(!t)}>Set Logic</button>
-      <button onClick={Verify}>LINK</button>
+      <Link href="/minting">mint mock nfts [host, stimulus]</Link>
+      <ConnectButton label="Connect ME!!" accountStatus="address" />
+      <div>
+        {!address ? (
+          <div>Loading ..</div>
+        ) : (
+          <div>
+            <div>
+              <label>Host</label>
+              <select onChange={(event) => setSelectedHost(event.target.value)}>
+                <option key={0} value={null}>
+                  select
+                </option>
+                {hostData.map((data) => {
+                  return (
+                    <option key={data.toString()} value={data.toString()}>
+                      {data.toString()}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+            <div>
+              <label>Stimulus</label>
+              <select
+                onChange={(event) => setSelectedStimulus(event.target.value)}
+              >
+                <option key={0} value={null}>
+                  select
+                </option>
+                {stimulusData.map((data) => {
+                  return (
+                    <option key={data.toString()} value={data.toString()}>
+                      {data.toString()}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+            <div>
+              <button onClick={() => approve()}>Approve</button>
+              <button>Lock</button>
+              <button>Fusion</button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
