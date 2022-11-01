@@ -9,11 +9,12 @@ export function useLock(hostTokenId, stimulusTokenId) {
     enabled: hostTokenId > 0 && stimulusTokenId > 0 ? true : false,
   });
 
-  const { write, isError, isLoading } = useContractWrite(hostConfig.config);
+  const { write, isError, isLoading, isSuccess } = useContractWrite(
+    hostConfig.config
+  );
 
   return {
     lock: write,
-    isError,
-    isLoading,
+    Locked: isSuccess,
   };
 }
