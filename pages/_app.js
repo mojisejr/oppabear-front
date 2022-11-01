@@ -8,9 +8,10 @@ const { chains, provider } = configureChains(
   [
     // chain.mainnet,
     // chain.polygon,
-    chain.polygonMumbai,
+    // chain.polygonMumbai,
     // chain.optimism,
     // chain.arbitrum,
+    chain.goerli,
   ],
   [publicProvider()]
 );

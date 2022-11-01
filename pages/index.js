@@ -14,26 +14,8 @@ import { useFusion } from "../blockchain/aggregates/fusion";
 import { useLabs } from "../blockchain/labs";
 
 function Home() {
-  const [selectedHost, setSelectedHost] = useState(0);
-  const [selectedStimulus, setSelectedStimulus] = useState(0);
+  const [selectedTab, setSelected] = useState(0);
   const { address, isConnected } = useAccount();
-  const { hostData, stimulusData, isError, isLoading } = useReadRaws(address);
-  const { approveHost, approveStimulus, approved } = useApprove(
-    selectedHost,
-    selectedStimulus
-  );
-
-  const hostApproved = HostApproval();
-  const stimulusApproved = StimulusApproval();
-
-  const { lock } = useLock(hostApproved, stimulusApproved);
-  const { fusion } = useFusion(selectedHost, selectedStimulus);
-  const { isFusionable } = useLabs(selectedHost, selectedHost);
-
-  function approve() {
-    approveHost();
-    approveStimulus();
-  }
 
   return (
     <div className={styles.container}>
@@ -43,8 +25,48 @@ function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <ConnectButton />
-      <div>{address}</div>
-      <Link href="/minting">mint mock nfts [host, stimulus]</Link>
+      {isConnected ? (
+        <div>
+          <div>{address}</div>
+          <Link href="/minting">mint mock nfts [host, stimulus]</Link>
+          <ul>
+            <li>
+              <button onClick={() => setSelected(0)}>Lock Page</button>
+            </li>
+            <li>
+              <button onClick={() => setSelected(1)}>Fusion Page</button>
+            </li>
+          </ul>
+
+          <div>
+            {selectedTab == 0 ? <LockTab address={address} /> : <FusionTab />}
+          </div>
+        </div>
+      ) : (
+        <div>Loding ...</div>
+      )}
+    </div>
+  );
+}
+
+function LockTab({ address }) {
+  const [selectedHost, setSelectedHost] = useState(0);
+  const [selectedStimulus, setSelectedStimulus] = useState(0);
+  const { hostData, stimulusData, isError, isLoading } = useReadRaws(address);
+  const { approveHost, approveStimulus, approved } = useApprove(
+    selectedHost,
+    selectedStimulus
+  );
+  const hostApproved = HostApproval();
+  const stimulusApproved = StimulusApproval();
+
+  const { lock } = useLock(hostApproved, stimulusApproved);
+  function approve() {
+    approveHost();
+    approveStimulus();
+  }
+  return (
+    <div>
       <div>
         {!address ? (
           <div>Loading ..</div>
@@ -92,15 +114,18 @@ function Home() {
               <button disabled={!lock} onClick={() => lock()}>
                 Lock
               </button>
-              <button disabled={!isFusionable} onClick={() => fusion()}>
-                Fusion
-              </button>
             </div>
           </div>
         )}
       </div>
     </div>
   );
+}
+
+function FusionTab() {
+  // const { isFusionable } = useLabs(selectedHost, selectedHost);
+  // const { fusion } = useFusion(selectedHost, selectedStimulus);
+  return <div>Fusion Tab</div>;
 }
 
 export default Home;

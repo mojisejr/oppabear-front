@@ -87,6 +87,13 @@ const abi = [
     type: "function",
   },
   {
+    inputs: [{ internalType: "address", name: "_owner", type: "address" }],
+    name: "getFusionablePairs",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       { internalType: "uint256", name: "_hostTokenId", type: "uint256" },
     ],

@@ -1,7 +1,7 @@
 import abi from "../abis/mutant.abi";
 
 const contract = {
-  address: "0x57C7D817A4c3f4dBaEBdef2057CDEd8f5e61Cf44",
+  address: "0xc84E1CAb3C09A4d152119d6d0F0B3015fFD5F4fE",
   abi,
 };
 

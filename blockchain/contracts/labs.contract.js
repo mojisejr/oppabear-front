@@ -1,7 +1,7 @@
 import abi from "../abis/labs.abi";
 
 const contract = {
-  address: "0xB5aB626BcaD0e8c09760e9B1d161578b61CaF559",
+  address: "0x0331D5eab37809dFe764382A11B9B676F7886cc2",
   abi,
 };
 
