@@ -1,21 +1,33 @@
 import Head from "next/head";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 import { useReadRaws } from "../blockchain/aggregates/read.raw";
 import { useApprove } from "../blockchain/aggregates/approve.token";
+import { useLock } from "../blockchain/aggregates/lock";
+import { useFusion } from "../blockchain/aggregates/fusion";
+import { useLabs } from "../blockchain/labs";
 
 function Home() {
   const [selectedHost, setSelectedHost] = useState(0);
   const [selectedStimulus, setSelectedStimulus] = useState(0);
   const { address, isConnected } = useAccount();
   const { hostData, stimulusData, isError, isLoading } = useReadRaws(address);
-  // const { approveHost, approveStimulus } = useApprove(
-  //   selectedHost,
-  //   selectedStimulus
-  // );
+  const { approveHost, approveStimulus } = useApprove(
+    selectedHost,
+    selectedStimulus
+  );
+
+  const { lock } = useLock(selectedHost, selectedStimulus);
+  const { fusion } = useFusion(selectedHost, selectedStimulus);
+  const { isFusionable } = useLabs(selectedHost, selectedHost);
+
+  function approve() {
+    approveHost();
+    approveStimulus();
+  }
 
   return (
     <div className="">
@@ -26,7 +38,7 @@ function Home() {
       </Head>
       <div>{address}</div>
       <Link href="/minting">mint mock nfts [host, stimulus]</Link>
-      <ConnectButton label="Connect ME!!" accountStatus="address" />
+      <ConnectButton />
       <div>
         {!address ? (
           <div>Loading ..</div>
@@ -65,9 +77,18 @@ function Home() {
               </select>
             </div>
             <div>
-              <button onClick={() => approve()}>Approve</button>
-              <button>Lock</button>
-              <button>Fusion</button>
+              <button
+                disabled={!approveHost || !approveStimulus}
+                onClick={() => approve()}
+              >
+                Approve
+              </button>
+              <button disabled={!lock} onClick={() => lock()}>
+                Lock
+              </button>
+              <button disabled={!isFusionable} onClick={() => fusion()}>
+                Fusion
+              </button>
             </div>
           </div>
         )}
