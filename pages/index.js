@@ -12,6 +12,8 @@ import { StimulusApproval } from "../blockchain/events/stimulus.approval.event";
 import { useLock } from "../blockchain/aggregates/lock";
 import { useFusion } from "../blockchain/aggregates/fusion";
 import { useLabs } from "../blockchain/labs";
+import { useGetFusionablePairs } from "../blockchain/aggregates/read.locked";
+import { TokenLocked } from "../blockchain/events/locked.event";
 
 function Home() {
   const [selectedTab, setSelected] = useState(0);
@@ -39,7 +41,11 @@ function Home() {
           </ul>
 
           <div>
-            {selectedTab == 0 ? <LockTab address={address} /> : <FusionTab />}
+            {selectedTab == 0 ? (
+              <LockTab address={address} />
+            ) : (
+              <FusionTab address={address} />
+            )}
           </div>
         </div>
       ) : (
@@ -50,6 +56,7 @@ function Home() {
 }
 
 function LockTab({ address }) {
+  const [isLoaded, setIsLoaded] = useState(0);
   const [selectedHost, setSelectedHost] = useState(0);
   const [selectedStimulus, setSelectedStimulus] = useState(0);
   const { hostData, stimulusData, isError, isLoading } = useReadRaws(address);
@@ -57,14 +64,27 @@ function LockTab({ address }) {
     selectedHost,
     selectedStimulus
   );
-  const hostApproved = HostApproval();
-  const stimulusApproved = StimulusApproval();
 
-  const { lock } = useLock(hostApproved, stimulusApproved);
+  const hostApproved = parseInt(HostApproval().approval.toString());
+  const stimulusApproved = parseInt(StimulusApproval().approval.toString());
+  const locked = parseInt(TokenLocked().locked.toString());
+  const { lock } = useLock(selectedHost, selectedStimulus);
+
+  useEffect(() => {
+    if (stimulusApproved > 0) {
+      setIsLoaded(stimulusApproved);
+    }
+
+    if (locked > 0) {
+      setIsLoaded(locked);
+    }
+  }, [stimulusApproved, locked]);
+
   function approve() {
     approveHost();
     approveStimulus();
   }
+
   return (
     <div>
       <div>
@@ -107,25 +127,81 @@ function LockTab({ address }) {
             <div>
               <button
                 disabled={!approveHost || !approveStimulus}
-                onClick={() => approve()}
+                onClick={() => {
+                  setIsLoaded(0);
+                  approve();
+                }}
               >
                 Approve
               </button>
-              <button disabled={!lock} onClick={() => lock()}>
+              <button
+                disabled={!lock}
+                onClick={() => {
+                  setIsLoaded(0);
+                  lock();
+                }}
+              >
                 Lock
               </button>
             </div>
           </div>
         )}
       </div>
+      {isLoaded <= 0 ? <div></div> : <Loading />}
     </div>
   );
 }
 
-function FusionTab() {
-  // const { isFusionable } = useLabs(selectedHost, selectedHost);
-  // const { fusion } = useFusion(selectedHost, selectedStimulus);
-  return <div>Fusion Tab</div>;
+function FusionTab({ address }) {
+  const [selectedPair, setSelectedPair] = useState({ host: 0, stimulus: 0 });
+  const { data } = useGetFusionablePairs(address);
+  const { isFusionable } = useLabs(selectedPair.host, selectedPair.stimulus);
+  const { fusion } = useFusion(selectedPair.host, selectedPair.stimulus);
+
+  if (data.length <= 0) {
+    return <div>no locked pairs</div>;
+  }
+
+  return (
+    <div>
+      {data ? (
+        <div>
+          <label>Locked Pairs</label>
+          <select
+            onChange={(event) => {
+              console.log(event.target.value);
+              if (event.target.value == "select") {
+                setSelectedPair({ host: 0, stimulus: 0 });
+              } else {
+                const parsedEvent = JSON.parse(event.target.value);
+                setSelectedPair(parsedEvent);
+              }
+            }}
+          >
+            <option key={0} value={null}>
+              select
+            </option>
+            {data.map((pairs) => {
+              return (
+                <option key={pairs.host} value={JSON.stringify(pairs)}>
+                  {pairs.host} with {pairs.stimulus}
+                </option>
+              );
+            })}
+          </select>
+          <button disabled={!isFusionable && !fusion} onClick={() => fusion()}>
+            Fusion
+          </button>
+        </div>
+      ) : (
+        <div>no locked pairs</div>
+      )}
+    </div>
+  );
+}
+
+function Loading() {
+  return <h1>Success</h1>;
 }
 
 export default Home;

@@ -13,6 +13,7 @@ export function HostApproval() {
     },
   });
 
+  //{tokenId, approved}
   return {
     approval,
   };
