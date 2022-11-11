@@ -91,7 +91,7 @@ const abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "tokenId",
+        name: "_tokenId",
         type: "uint256",
       },
     ],
@@ -115,6 +115,38 @@ const abi = [
       },
     ],
     name: "OwnershipTransferred",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "RequestBaseURI",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_tokenId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "_baseURI",
+        type: "string",
+      },
+    ],
+    name: "SetBaseURI",
     type: "event",
   },
   {
@@ -242,6 +274,13 @@ const abi = [
     type: "function",
   },
   {
+    inputs: [{ internalType: "uint256", name: "_tokenId", type: "uint256" }],
+    name: "requestBaseURI",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [
       { internalType: "address", name: "from", type: "address" },
       { internalType: "address", name: "to", type: "address" },
@@ -275,6 +314,16 @@ const abi = [
     type: "function",
   },
   {
+    inputs: [
+      { internalType: "uint256", name: "_tokenId", type: "uint256" },
+      { internalType: "string", name: "_baseURI", type: "string" },
+    ],
+    name: "setBaseURI",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [{ internalType: "bytes4", name: "interfaceId", type: "bytes4" }],
     name: "supportsInterface",
     outputs: [{ internalType: "bool", name: "", type: "bool" }],
@@ -289,7 +338,7 @@ const abi = [
     type: "function",
   },
   {
-    inputs: [{ internalType: "uint256", name: "tokenId", type: "uint256" }],
+    inputs: [{ internalType: "uint256", name: "_tokenId", type: "uint256" }],
     name: "tokenURI",
     outputs: [{ internalType: "string", name: "", type: "string" }],
     stateMutability: "view",

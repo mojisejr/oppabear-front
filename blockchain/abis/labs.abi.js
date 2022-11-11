@@ -9,6 +9,7 @@ const abi = [
     stateMutability: "nonpayable",
     type: "constructor",
   },
+  { inputs: [], name: "EmptyList", type: "error" },
   {
     anonymous: false,
     inputs: [
@@ -70,45 +71,19 @@ const abi = [
   {
     inputs: [
       { internalType: "uint256", name: "_hostTokenId", type: "uint256" },
-    ],
-    name: "cancelFusion",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "uint256", name: "_hostTokenId", type: "uint256" },
       { internalType: "uint256", name: "_stimulusTokenId", type: "uint256" },
     ],
     name: "fusion",
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "address", name: "_owner", type: "address" }],
-    name: "getFusionablePairs",
-    outputs: [{ internalType: "string", name: "", type: "string" }],
-    stateMutability: "view",
+    stateMutability: "payable",
     type: "function",
   },
   {
     inputs: [
       { internalType: "uint256", name: "_hostTokenId", type: "uint256" },
     ],
-    name: "getFusionedOf",
+    name: "getPairOf",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "uint256", name: "_hostTokenId", type: "uint256" },
-      { internalType: "uint256", name: "_stimulusTokenId", type: "uint256" },
-    ],
-    name: "isFusionable",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "view",
     type: "function",
   },
@@ -124,16 +99,6 @@ const abi = [
     name: "isStimulusLocked",
     outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "uint256", name: "_hostTokenId", type: "uint256" },
-      { internalType: "uint256", name: "_stimulusTokenId", type: "uint256" },
-    ],
-    name: "lock",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -169,6 +134,24 @@ const abi = [
   {
     inputs: [],
     name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "contract IERC721", name: "_host", type: "address" },
+    ],
+    name: "setHost",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "contract IERC721", name: "_stimulus", type: "address" },
+    ],
+    name: "setStimulus",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

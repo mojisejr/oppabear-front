@@ -1,7 +1,7 @@
 import abi from "../abis/stimulus.abi";
 
 const contract = {
-  address: "0x5183D3a27AeC003aFCAF0A4a89515c4397672d79",
+  address: "0xb01fCF558c3EC204e21E303267669254d7eea4BC",
   abi,
 };
 

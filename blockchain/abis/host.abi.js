@@ -238,7 +238,7 @@ const abi = [
     type: "function",
   },
   {
-    inputs: [{ internalType: "uint256", name: "tokenId", type: "uint256" }],
+    inputs: [{ internalType: "uint256", name: "_tokenId", type: "uint256" }],
     name: "tokenURI",
     outputs: [{ internalType: "string", name: "", type: "string" }],
     stateMutability: "view",
@@ -281,5 +281,4 @@ const abi = [
     type: "function",
   },
 ];
-
 export default abi;
