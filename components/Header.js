@@ -11,7 +11,7 @@ function Header() {
     >
       <div
         id="oppabear-logo-box"
-        className="w-[150px] absolute top-[2%] left-[2%]"
+        className="w-[150px] absolute top-[3%] left-[3%]"
       >
         <Image id="oppabear-logo-image" src={logo} alt="oppabear-logo"></Image>
       </div>
