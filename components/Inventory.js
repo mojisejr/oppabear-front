@@ -3,7 +3,10 @@ import Item from "./Item";
 function Inventory({ imageData, desc, fn }) {
   let images = imageData || [];
   return (
-    <div id="nft-inventory-main" className="">
+    <div
+      id="nft-inventory-main"
+      className="border-white border-dashed first:border-r-2 last:border-l-2 "
+    >
       {images.length > 0 ? (
         <ul
           id="nft-main"

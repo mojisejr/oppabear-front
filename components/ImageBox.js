@@ -3,7 +3,7 @@ function ImageBox({ sign, desc, imageSrc }) {
   return (
     <div
       id="image-box-container"
-      className="w-[280px] h-[300px] bg-gradient-to-br from-[#0E2645] to-[#4C5D7F] rounded-xl border-dashed border-slate-300 border-[2px] flex flex-col items-center justify-center 
+      className="w-[280px] h-[310px] bg-gradient-to-br from-[#0E2645] to-[#4C5D7F] rounded-2xl border-dashed border-slate-300 border-[2px] flex flex-col items-center justify-center 
       shadow-[10px_10px_30px_-15px_rgba(0,0,0,0.8)] text-white overflow-hidden"
     >
       {imageSrc == undefined ? (
