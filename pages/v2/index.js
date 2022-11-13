@@ -1,8 +1,10 @@
-import styles from "../../styles/Home.module.css";
 import Head from "next/head";
 import Link from "next/link";
+
 import Header from "../../components/Header";
 import ImageBox from "../../components/ImageBox";
+import Inventory from "../../components/Inventory";
+import Button from "../../components/Button";
 
 import { useState } from "react";
 import { useAccount } from "wagmi";
@@ -11,8 +13,14 @@ import { useApprove } from "../../blockchain/aggregates/approve.token";
 import { useFusion } from "../../blockchain/aggregates/fusion";
 import { TokenLocked } from "../../blockchain/events/locked.event";
 
+import mockOppa from "../../mocks/mockOppabear";
+import mockSerum from "../../mocks/mockSerum";
+import { useAppContext } from "../../hooks/context";
+
 function HomeV2() {
   const { address, isConnected } = useAccount();
+  const [approved, setApprove] = useState(false);
+  const { setSelectedMain, setSelectedSub, main, sub } = useAppContext();
 
   return (
     <div className="bg-gradient-to-b from-[#1A2B45] to-slate-800 min-h-screen overflow-auto ">
@@ -27,26 +35,32 @@ function HomeV2() {
           id="image-box-section"
           className="flex z-[10] justify-center space-x-[80px]"
         >
-          <ImageBox
-            sign={"+"}
-            desc={"Drag & Drop Oppa Bear Evolution Gen.1 below"}
-          />
-          <ImageBox sign={"+"} desc={"Drag & Drop"} />
+          <ImageBox sign={"+"} desc={"Select Oppa Gen.1"} imageSrc={main} />
+          <ImageBox sign={"+"} desc={"Select Serum"} imageSrc={sub} />
         </div>
         <div
           id="nft-inventory-container"
           className="relative flex justify-center"
         >
-          <button className="absolute text-xl top-[-8%] pl-10 pr-10 pt-5 pb-5 z-10 text-white font-bold bg-gradient-to-br from-[#FF9820] to-[#FFD075] rounded-[100px] shadow-[3px_-3px_0px_1px_rgba(255,208,117,0.8)]">
-            Approve
-          </button>
+          {!approved ? (
+            <Button name={"Approve"} fn={() => setApprove(true)} />
+          ) : (
+            <Button
+              name={"Fusion"}
+              fn={() => {
+                alert("Fusioned this will show the modal congratulation page.");
+                setApprove(false);
+              }}
+            />
+          )}
+          k
           <div
             id="nft-inventory-panel"
             className="absolute top-[-20%] w-[65%] bg-gradient-to-b from-[#0E1937] text-white  rounded-t-[50px] shadow-[10px_-20px_30px_-15px_rgba(0,0,0,1)]"
           >
             <div
               id="your-wallet-label"
-              className="absolute text-black top-[15%] left-[-1%] text-xl text-center pt-3 pb-3 pr-10 pl-4 bg-[#F0CC52] rounded-r-[100px] shadow-xl"
+              className="absolute text-black top-[20%] left-[-1%] text-xl text-center pt-3 pb-3 pr-10 pl-4 bg-[#F0CC52] rounded-r-[100px] shadow-xl"
             >
               Your Wallet
             </div>
@@ -54,203 +68,22 @@ function HomeV2() {
               id="nft-inventory-grid"
               className="grid grid-cols-2 gap-x-4 h-[100%] pt-[22%] pb-[30px]"
             >
-              <div id="nft-inventory-main" className="">
-                <ul
-                  id="nft-main"
-                  className="grid grid-cols-2 gap-x-1 gap-y-3 p-2 justify-items-center"
-                >
-                  <li className="bg-blue-400 h-[150px] w-[150px] rounded-xl shadow-xl"></li>
-                  <li className="bg-blue-400 h-[150px] w-[150px] rounded-xl shadow-xl"></li>
-                  <li className="bg-blue-400 h-[150px] w-[150px] rounded-xl shadow-xl"></li>
-                  <li className="bg-blue-400 h-[150px] w-[150px] rounded-xl shadow-xl"></li>
-                  <li className="bg-blue-400 h-[150px] w-[150px] rounded-xl shadow-xl"></li>
-                  <li className="bg-blue-400 h-[150px] w-[150px] rounded-xl shadow-xl"></li>
-                  <li className="bg-blue-400 h-[150px] w-[150px] rounded-xl shadow-xl"></li>
-                  <li className="bg-blue-400 h-[150px] w-[150px] rounded-xl shadow-xl"></li>
-                </ul>
-              </div>
-              <div id="nft-inventory-sub" className="">
-                <ul
-                  id="nft-sub"
-                  className="grid grid-cols-2 gap-x-2 gap-y-3 p-2 justify-items-center"
-                >
-                  <li className="bg-red-400 h-[150px] w-[150px] rounded-xl shadow-xl"></li>
-                  <li className="bg-red-400 h-[150px] w-[150px] rounded-xl shadow-xl"></li>
-                  <li className="bg-red-400 h-[150px] w-[150px] rounded-xl shadow-xl"></li>
-                  <li className="bg-red-400 h-[150px] w-[150px] rounded-xl shadow-xl"></li>
-                </ul>
-              </div>
+              <Inventory
+                imageData={mockOppa.map((oppa) => oppa.tokenURI)}
+                fn={setSelectedMain}
+                desc="main item"
+              />
+              <Inventory
+                imageData={mockSerum.map((serum) => serum.tokenURI)}
+                desc="sub item"
+                fn={setSelectedSub}
+              />
             </div>
           </div>
         </div>
       </div>
-
-      {/* <Link href="/minting">
-        <h3>Mint mock nfts [host, stimulus]</h3>
-      </Link> */}
-
-      {/* {isConnected ? (
-        <div className={styles.actions}>
-          <LockTab address={address} />
-        </div>
-      ) : (
-        <h3>Fusions labs - Test</h3>
-      )} */}
     </div>
   );
-}
-
-function LockTab({ address }) {
-  const [isLoaded, setIsLoaded] = useState(0);
-  const [selectedHost, setSelectedHost] = useState(0);
-  const [selectedStimulus, setSelectedStimulus] = useState(0);
-  const { hostData, stimulusData, isError, isLoading } = useReadRaws(address);
-  const { approveHost, approveStimulus, approved } = useApprove(
-    selectedHost,
-    selectedStimulus
-  );
-
-  const locked = parseInt(TokenLocked().locked.toString());
-  const { fusion } = useFusion(selectedHost, selectedStimulus);
-
-  function approve() {
-    approveHost();
-    approveStimulus();
-  }
-
-  function doFusion() {
-    fusion();
-  }
-
-  return (
-    <div>
-      <div>
-        {!address ? (
-          <div>Loading ..</div>
-        ) : (
-          <div className={styles.actions}>
-            <div>
-              <label htmlFor="host">Host</label>
-              <select
-                id="host"
-                onChange={(event) => setSelectedHost(event.target.value)}
-              >
-                <option key={0} value={null}>
-                  select
-                </option>
-                {hostData.map((data) => {
-                  return (
-                    <option key={data.toString()} value={data.toString()}>
-                      {data.toString()}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-            <div>
-              <label htmlFor="stimulus">Stimulus</label>
-              <select
-                id="stimulus"
-                onChange={(event) => setSelectedStimulus(event.target.value)}
-              >
-                <option key={0} value={null}>
-                  select
-                </option>
-                {stimulusData.map((data) => {
-                  return (
-                    <option key={data.toString()} value={data.toString()}>
-                      {data.toString()}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-            <div>
-              <button
-                disabled={
-                  selectedHost <= 0 || selectedStimulus <= 0 || !approve
-                }
-                onClick={() => {
-                  setIsLoaded(0);
-                  approve();
-                }}
-              >
-                approve
-              </button>
-              <button
-                disabled={selectedHost <= 0 || selectedStimulus <= 0 || !fusion}
-                onClick={() => {
-                  setIsLoaded(0);
-                  doFusion();
-                }}
-              >
-                Fusion
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-      {isLoaded <= 0 ? <div></div> : <Loading />}
-    </div>
-  );
-}
-
-function Loading() {
-  return <h1>Success</h1>;
 }
 
 export default HomeV2;
-
-{
-  /* <div id="tokens-container" className="relative top-[25%]">
-            <div
-              id="tokens-container-inner"
-              className="flex pr-[3%] pl-[3%] justify-center gap-[10%]"
-            >
-              <div id="main-token-box">
-                <ul id="main-token-list-box" className="flex gap-[10px]">
-                  <li>
-                    <div
-                      id="tokens-card"
-                      className="w-[180px] h-[180px] bg-slate-400 shadow-sm rounded-xl"
-                    ></div>
-                  </li>
-                  <li>
-                    <div
-                      id="tokens-card"
-                      className="w-[180px] h-[180px] bg-slate-400 shadow-sm rounded-xl"
-                    ></div>
-                  </li>
-                  <li>
-                    <div
-                      id="tokens-card"
-                      className="w-[180px] h-[180px] bg-slate-400 shadow-sm rounded-xl"
-                    ></div>
-                  </li>
-                  <li>
-                    <div
-                      id="tokens-card"
-                      className="w-[180px] h-[180px] bg-slate-400 shadow-sm rounded-xl"
-                    ></div>
-                  </li>
-                </ul>
-              </div>
-              <div id="sub-token-box">
-                <ul id="main-token-list" className="flex gap-[10px] flex-wrap">
-                  <li>
-                    <div
-                      id="tokens-card"
-                      className="w-[180px] h-[180px] bg-pink-400 shadow-sm rounded-xl"
-                    ></div>
-                  </li>
-                  <li>
-                    <div
-                      id="tokens-card"
-                      className="w-[180px] h-[180px] bg-pink-400 shadow-sm rounded-xl"
-                    ></div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div> */
-}
