@@ -4,15 +4,16 @@ function CongratModal() {
       <div className="flex justify-center items-center h-[100%] w-[100%]">
         <div
           id="modal-container"
-          className="flex flex-col justify-center items-center w-[600px] h-[450px] rounded-xl shadow-2xl bg-gradient-to-b from-[#0E1937] to-[#0E1937cd] gap-2"
+          className="relative flex flex-col justify-center items-center w-[600px] h-[450px] rounded-xl shadow-2xl bg-gradient-to-b from-[#0E1937] to-[#0E1937cd] gap-2"
         >
-          <div className="text-2xl font-bold text-[#FF9820ce]">
+          <div className="text-2xl font-bold text-[#FF9820ce] ">
             Congratulations !
           </div>
           <div className="text-white">
             You have got Oppa Bear Evolution Gen.2
           </div>
-          <div className="w-[250px] h-[250px] bg-slate-200 rounded-xl"></div>
+          <div className="w-[250px] h-[250px] bg-slate-200 rounded-xl  shadow-[3px_-3px_0px_1px_rgba(255,208,117,0.8)]"></div>
+          <div id="particles" className="absolute w-[4px] h-[4px]"></div>
         </div>
       </div>
     </div>

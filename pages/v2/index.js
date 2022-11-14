@@ -5,6 +5,7 @@ import Header from "../../components/Header";
 import ImageBox from "../../components/ImageBox";
 import Inventory from "../../components/Inventory";
 import Button from "../../components/Button";
+import BeforeConnect from "../../components/beforeConnect";
 
 import { useState } from "react";
 import { useAccount } from "wagmi";
@@ -32,68 +33,72 @@ function HomeV2() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <div className="relative grid grid-rows-2">
-        <div
-          id="image-box-section"
-          className="flex z-[10] justify-center space-x-[80px]"
-        >
-          <ImageBox sign={"+"} desc={"Select Oppa Gen.1"} imageSrc={main} />
-          <ImageBox sign={"+"} desc={"Select Serum"} imageSrc={sub} />
-        </div>
-        <div
-          id="nft-inventory-container"
-          className="relative flex justify-center"
-        >
-          {!approved ? (
-            <Button
-              name={"Approve"}
-              fn={() => {
-                if (sub && main) {
-                  setApprove(true);
-                } else {
-                  alert("nothing approved .");
-                }
-              }}
-            />
-          ) : (
-            <Button
-              name={"Fusion"}
-              fn={() => {
-                setApprove(false);
-                setFusioned(true);
-              }}
-            />
-          )}
-          k
+      {address ? (
+        <div className="relative grid grid-rows-2">
           <div
-            id="nft-inventory-panel"
-            className="absolute top-[-20%] w-[65%] bg-gradient-to-b from-[#0E1937] text-white  rounded-t-[50px] shadow-[10px_-20px_30px_-15px_rgba(0,0,0,1)]"
+            id="image-box-section"
+            className="flex z-[10] justify-center space-x-[80px]"
           >
-            <div
-              id="your-wallet-label"
-              className="absolute text-black top-[20%] left-[-1%] text-xl text-center pt-3 pb-3 pr-10 pl-4 bg-[#F0CC52] rounded-r-[100px] shadow-xl"
-            >
-              Your Wallet
-            </div>
-            <div
-              id="nft-inventory-grid"
-              className="grid grid-cols-2 gap-x-0 h-[100%] pt-[22%] pb-[30px]"
-            >
-              <Inventory
-                imageData={mockOppa.map((oppa) => oppa.tokenURI)}
-                fn={setSelectedMain}
-                desc="main item"
+            <ImageBox sign={"+"} desc={"Select Oppa Gen.1"} imageSrc={main} />
+            <ImageBox sign={"+"} desc={"Select Serum"} imageSrc={sub} />
+          </div>
+          <div
+            id="nft-inventory-container"
+            className="relative flex justify-center"
+          >
+            {!approved ? (
+              <Button
+                name={"Approve"}
+                fn={() => {
+                  if (sub && main) {
+                    setApprove(true);
+                  } else {
+                    alert("nothing approved .");
+                  }
+                }}
               />
-              <Inventory
-                imageData={mockSerum.map((serum) => serum.tokenURI)}
-                desc="sub item"
-                fn={setSelectedSub}
+            ) : (
+              <Button
+                name={"Fusion"}
+                fn={() => {
+                  setApprove(false);
+                  setFusioned(true);
+                }}
               />
+            )}
+            <div
+              id="nft-inventory-panel"
+              className="absolute top-[-20%] w-[65%] bg-gradient-to-b from-[#0E1937] text-white  rounded-t-[50px] shadow-[10px_-20px_30px_-15px_rgba(0,0,0,1)]"
+            >
+              <div
+                id="your-wallet-label"
+                className="absolute text-black top-[20%] left-[-1%] text-xl text-center pt-3 pb-3 pr-10 pl-4 bg-[#F0CC52] rounded-r-[100px] shadow-xl"
+              >
+                Your Wallet
+              </div>
+              <div
+                id="nft-inventory-grid"
+                className="grid grid-cols-2 gap-x-0 h-[100%] pt-[22%] pb-[30px]"
+              >
+                <Inventory
+                  imageData={mockOppa.map((oppa) => oppa.tokenURI)}
+                  fn={setSelectedMain}
+                  desc="main item"
+                />
+                <Inventory
+                  imageData={mockSerum.map((serum) => serum.tokenURI)}
+                  desc="sub item"
+                  fn={setSelectedSub}
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      {fusioned ? <CongratModal></CongratModal> : null}
+      ) : (
+        <BeforeConnect />
+      )}
+      {/* {fusioned ? <CongratModal /> : null} */}
+      <CongratModal />
     </div>
   );
 }
