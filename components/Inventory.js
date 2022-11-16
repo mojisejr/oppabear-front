@@ -5,7 +5,7 @@ function Inventory({ imageData, desc, fn }) {
   return (
     <div
       id="nft-inventory-main"
-      className="border-white border-dashed first:border-r-2 last:border-l-2"
+      className="border-white border-dashed first:border-r-[1px] last:border-l-[1px]"
     >
       {images.length > 0 ? (
         <ul
@@ -21,7 +21,9 @@ function Inventory({ imageData, desc, fn }) {
           })}
         </ul>
       ) : (
-        <div>{desc}</div>
+        <div className="flex items-cetner justify-center">
+          <h1>{desc}</h1>
+        </div>
       )}
     </div>
   );

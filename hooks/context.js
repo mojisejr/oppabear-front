@@ -8,11 +8,11 @@ export function AppProvider({ children }) {
 
   function setSelectedMain(nft) {
     console.log("set main to be", nft);
-    setMain(nft.src);
+    setMain(nft);
   }
   function setSelectedSub(nft) {
     console.log("set sub to be", nft);
-    setSub(nft.src);
+    setSub(nft);
   }
 
   return (

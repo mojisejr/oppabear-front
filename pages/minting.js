@@ -12,18 +12,24 @@ function MintingPage() {
   const { account, isConnected } = useAccount();
 
   return (
-    <div className={styles.container}>
-      <h1>Minting Host and Stimulus</h1>
+    <div className="flex flex-col justify-center items-center gap-4 h-screen bg-gradient-to-br from-slate-600 to-blue-200">
+      <h1 className="text-[100px] font-bold">Minting Host and Stimulus</h1>
       <ConnectButton />
       {isConnected && (
         <div>
-          <div>
-            <button disabled={!mintHost} onClick={() => mintHost()}>
+          <div className="flex  justify-center gap-4">
+            <button
+              className="p-3 bg-slate-800 text-white hover:bg-red-600 rounded-xl"
+              disabled={!mintHost}
+              onClick={() => mintHost()}
+            >
               Mint Host
             </button>
-          </div>
-          <div>
-            <button disabled={!mintStimulus} onClick={() => mintStimulus()}>
+            <button
+              className="p-3 bg-slate-800 text-white hover:bg-red-600 rounded-xl"
+              disabled={!mintStimulus}
+              onClick={() => mintStimulus()}
+            >
               Mint Stimulus
             </button>
           </div>

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import Link from "next/link";
 
 import logo from "../public/oppalogo.png";
 
@@ -15,6 +16,13 @@ function Header() {
       >
         <Image id="oppabear-logo-image" src={logo} alt="oppabear-logo"></Image>
       </div>
+      <Link
+        className="text-white self-center pr-2 hover:underline"
+        href="/minting"
+        passHref
+      >
+        mint mock nft
+      </Link>
       <ConnectButton />
     </div>
   );
