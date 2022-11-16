@@ -97,8 +97,8 @@ function HomeV2() {
       ) : (
         <BeforeConnect />
       )}
-      {/* {fusioned ? <CongratModal /> : null} */}
-      <CongratModal />
+      {fusioned ? <CongratModal /> : null}
+      {/* <CongratModal /> */}
     </div>
   );
 }

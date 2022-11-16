@@ -1,6 +1,45 @@
-.box {
+.glow::before,
+.glow::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  background: linear-gradient(
+    45deg,
+    #fff323,
+    #ff1700,
+    #06ff00,
+    #00ffff,
+    #ff00ff,
+    #ff0099,
+    #6e0dd0,
+    #ff3300,
+    #099fff
+  );
+  background-size: 300%;
+  width: calc(100% + 5px);
+  height: calc(100% + 5px);
+  z-index: -1;
+  border-radius: 10px;
+  animation: animate 10s linear infinite;
 }
-.box::before {
+
+@keyframes animate {
+  0% {
+    background-position: 0 0;
+  }
+  30% {
+    background-position: 0 200%;
+  }
+  50% {
+    background-position: 400% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
 }
-.box::after {
+
+.glow::after {
+  filter: blur(30px);
 }
