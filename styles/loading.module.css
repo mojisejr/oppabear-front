@@ -1,0 +1,52 @@
+.ring {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  animation: animatering 0.5s linear infinite;
+}
+
+@keyframes animatering {
+  0% {
+    transfrom: rotate(0deg);
+    box-shadow: 1px 5px 30px #fff323;
+    filter: blur(1px);
+  }
+
+  50% {
+    transform: rotate(180deg);
+    box-shadow: 1px 5px 2px #18b201;
+    filter: blur(0px);
+  }
+
+  100% {
+    transform: rotate(360deg);
+    box-shadow: 1px 5px 2px #ff1700;
+    filter: blur(8px);
+  }
+}
+
+.ring:before {
+  position: relative;
+  content: "";
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+.text {
+  color: #73737359;
+  font-size: 25px;
+  letter-spacing: 1px;
+  line-height: 200px;
+  animation: animatetext 1s ease-in-out infinite;
+}
+
+@keyframes animatetext {
+  50% {
+    color: #fff323;
+  }
+}
