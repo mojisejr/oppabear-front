@@ -7,32 +7,44 @@ import Button from "../components/Button";
 import BeforeConnect from "../components/beforeConnect";
 import LoadingPage from "../components/loading";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { useGetTokenOfOwner } from "../blockchain/aggregates/get.TokenOfOwner";
-
-import mockOppa from "../mocks/mockOppabear";
-import mockSerum from "../mocks/mockSerum";
 import { useAppContext } from "../hooks/context";
+import { useApprove } from "../blockchain/aggregates/approve.token";
+import { useFusion } from "../blockchain/aggregates/fusion";
+import { EventApproval } from "../blockchain/events/approval.event";
+import { EventFusioned } from "../blockchain/events/fusioned.event";
+
 import CongratModal from "../components/congrat.modal";
 import OnlyDesktopPage from "../components/onlyDesktop";
-import Link from "next/link";
 
 function HomeV2() {
-  const { address, isConnected } = useAccount();
+  const [loading, setLoading] = useState(false);
+  const { address } = useAccount();
   const [approved, setApprove] = useState(false);
   const [fusioned, setFusioned] = useState(false);
   const { setSelectedMain, setSelectedSub, main, sub } = useAppContext();
-  const {
-    hostData,
-    hostURIs,
-    stimulusData,
-    stimulusURIs,
-    isHostLoading,
-    isStimulusLoading,
-    isHostOK,
-    isStimulusOK,
-  } = useGetTokenOfOwner(address);
+  const { hostURIs, stimulusURIs } = useGetTokenOfOwner(address);
+  const { approveHost, approveStimulus, isApproved } = useApprove(main, sub);
+  const { fusion, isFusioned } = useFusion(main, sub);
+  const approveEvent = EventApproval();
+  const fusionEvent = EventFusioned();
+
+  useEffect(() => {
+    console.log("isApproved", isApproved, approveEvent.approval);
+    if (isApproved && approveEvent.approval) {
+      setApprove(true);
+      setLoading(false);
+    }
+
+    console.log("isFusioned", isFusioned, fusionEvent.fusional);
+
+    if (isFusioned && fusionEvent.fusional) {
+      setFusioned(true);
+      setLoading(false);
+    }
+  }, [isApproved, approveEvent.approval, isFusioned, fusionEvent.fusional]);
 
   return (
     <div className="relative bg-gradient-to-b from-[#1A2B45] to-slate-800 min-h-screen overflow-auto">
@@ -62,7 +74,9 @@ function HomeV2() {
                     name={"Approve"}
                     fn={() => {
                       if (sub && main) {
-                        setApprove(true);
+                        setLoading(true);
+                        approveHost();
+                        approveStimulus();
                       } else {
                         alert("nothing approved .");
                       }
@@ -72,8 +86,9 @@ function HomeV2() {
                   <Button
                     name={"Fusion"}
                     fn={() => {
+                      setLoading(true);
                       setApprove(false);
-                      setFusioned(true);
+                      fusion();
                     }}
                   />
                 )}
@@ -94,12 +109,12 @@ function HomeV2() {
                 className="grid grid-cols-2 gap-x-0 h-[100%] pt-[22%] pb-[30px]"
               >
                 <Inventory
-                  imageData={hostURIs.map((uri) => JSON.parse(uri).image)}
+                  imageData={hostURIs.map((uri) => JSON.parse(uri))}
                   fn={setSelectedMain}
                   desc="no gen 1 in your wallet"
                 />
                 <Inventory
-                  imageData={stimulusURIs.map((uri) => JSON.parse(uri).image)}
+                  imageData={stimulusURIs.map((uri) => JSON.parse(uri))}
                   desc="no serum in your wallet"
                   fn={setSelectedSub}
                 />
@@ -114,9 +129,7 @@ function HomeV2() {
       <div className="lg:hidden">
         <OnlyDesktopPage />
       </div>
-      {isHostLoading && isStimulusLoading && address != undefined ? (
-        <LoadingPage />
-      ) : null}
+      {loading ? <LoadingPage /> : null}
     </div>
   );
 }

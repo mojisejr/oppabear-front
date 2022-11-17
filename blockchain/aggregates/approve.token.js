@@ -7,15 +7,15 @@ export function useApprove(hostTokenId, stimulusTokenId) {
   const hostConfig = usePrepareContractWrite({
     ...hostContract,
     functionName: "approve",
-    args: [labContract.address, hostTokenId],
-    enabled: hostTokenId > 0 ? true : false,
+    args: [labContract.address, hostTokenId?.edition],
+    enabled: hostTokenId?.edition > 0 ? true : false,
   });
 
   const stimulusConfig = usePrepareContractWrite({
     ...stimlusContract,
     functionName: "approve",
-    args: [labContract.address, stimulusTokenId],
-    enabled: stimulusTokenId > 0 ? true : false,
+    args: [labContract.address, stimulusTokenId?.edition],
+    enabled: stimulusTokenId?.edition > 0 ? true : false,
   });
 
   const host = useContractWrite(hostConfig.config);
@@ -24,6 +24,6 @@ export function useApprove(hostTokenId, stimulusTokenId) {
   return {
     approveHost: host.write,
     approveStimulus: stimulus.write,
-    approved: host.isSuccess && stimulus.isSuccess,
+    isApproved: host.isSuccess && stimulus.isSuccess,
   };
 }

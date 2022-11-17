@@ -9,7 +9,7 @@ function ImageBox({ sign, desc, imageSrc }) {
       {imageSrc == undefined ? (
         <NoImage sign={sign} desc={desc} />
       ) : (
-        <ShowImage src={imageSrc} />
+        <ShowImage src={imageSrc.image} tokenId={imageSrc.edition} />
       )}
     </div>
   );
@@ -40,7 +40,7 @@ function ShowImage({ src, tokenId }) {
       <div className="rounded-2xl overflow-hidden shadow-xl mb-2">
         <Image src={src} width={250} height={250} alt="nft image" />
       </div>
-      <div className="text-center">TokenID : {!tokenId ? "0" : "1"}</div>
+      <div className="text-center">TokenID : {!tokenId ? "0" : tokenId}</div>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const AppContext = createContext();
 
@@ -7,11 +7,9 @@ export function AppProvider({ children }) {
   const [selectedSub, setSub] = useState(null);
 
   function setSelectedMain(nft) {
-    console.log("set main to be", nft);
     setMain(nft);
   }
   function setSelectedSub(nft) {
-    console.log("set sub to be", nft);
     setSub(nft);
   }
 

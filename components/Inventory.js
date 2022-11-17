@@ -1,21 +1,20 @@
 import Item from "./Item";
 
 function Inventory({ imageData, desc, fn }) {
-  let images = imageData || [];
   return (
     <div
       id="nft-inventory-main"
       className="border-white border-dashed first:border-r-[1px] last:border-l-[1px]"
     >
-      {images.length > 0 ? (
+      {imageData.length > 0 && imageData[0] != null ? (
         <ul
           id="nft-main"
           className="grid grid-cols-2 gap-x-1 gap-y-3 p-2 justify-items-center"
         >
-          {images.map((image, index) => {
+          {imageData.map((image, index) => {
             return (
               <li key={index} onClick={() => fn(image)}>
-                <Item src={image} />
+                <Item src={image.image} />
               </li>
             );
           })}
