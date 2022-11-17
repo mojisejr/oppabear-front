@@ -96,7 +96,7 @@ function HomeV2() {
             ) : null}
             <div
               id="nft-inventory-panel"
-              className="absolute top-[-20%] w-[65%] xl:w-[60%] 2xl:w-[43%] bg-gradient-to-b from-[#0E1937] text-white  rounded-t-[50px] shadow-[10px_-20px_30px_-15px_rgba(0,0,0,1)]"
+              className="absolute top-[-20%] w-[65%] xl:w-[60%] 2xl:w-[43%] min-h-[650px] bg-gradient-to-b from-[#0E1937]  text-white  rounded-t-[50px] shadow-[10px_-20px_30px_-15px_rgba(0,0,0,1)]"
             >
               <div
                 id="your-wallet-label"
