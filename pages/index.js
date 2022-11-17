@@ -100,7 +100,7 @@ function HomeV2() {
             >
               <div
                 id="your-wallet-label"
-                className="absolute text-black top-[25%] left-[-1%] text-xl text-center pt-3 pb-3 pr-10 pl-4 bg-[#F0CC52] rounded-r-[100px] shadow-xl"
+                className="absolute text-black top-[90px] left-[-1%] text-xl text-center pt-3 pb-3 pr-10 pl-4 bg-[#F0CC52] rounded-r-[100px] shadow-xl"
               >
                 Your Wallet
               </div>
