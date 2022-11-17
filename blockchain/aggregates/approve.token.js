@@ -24,6 +24,8 @@ export function useApprove(hostTokenId, stimulusTokenId) {
   return {
     approveHost: host.write,
     approveStimulus: stimulus.write,
+    approvedHost: hostTokenId,
+    approvedSti: stimulusTokenId,
     isApproved: host.isSuccess && stimulus.isSuccess,
   };
 }

@@ -26,21 +26,27 @@ function HomeV2() {
   const [fusioned, setFusioned] = useState(false);
   const { setSelectedMain, setSelectedSub, main, sub } = useAppContext();
   const { hostURIs, stimulusURIs } = useGetTokenOfOwner(address);
-  const { approveHost, approveStimulus, isApproved } = useApprove(main, sub);
-  const { fusion, isFusioned } = useFusion(main, sub);
+  const {
+    approveHost,
+    approveStimulus,
+    isApproved,
+    approvedHost,
+    approvedSti,
+  } = useApprove(main, sub);
+  const { fusion, isFusioned } = useFusion(approvedHost, approvedSti);
   const approveEvent = EventApproval();
   const fusionEvent = EventFusioned();
 
   useEffect(() => {
-    console.log("isApproved", isApproved, approveEvent.approval);
-    if (isApproved && approveEvent.approval) {
+    if (
+      isApproved &&
+      approveEvent.approval &&
+      !isFusioned &&
+      !fusionEvent.fusional
+    ) {
       setApprove(true);
       setLoading(false);
-    }
-
-    console.log("isFusioned", isFusioned, fusionEvent.fusional);
-
-    if (isFusioned && fusionEvent.fusional) {
+    } else if (isFusioned && fusionEvent.fusional) {
       setFusioned(true);
       setLoading(false);
     }
@@ -69,7 +75,7 @@ function HomeV2() {
           >
             {hostURIs.length && stimulusURIs.length ? (
               <div className="flex justify-center">
-                {!approved ? (
+                {!approved && !isApproved ? (
                   <Button
                     name={"Approve"}
                     fn={() => {
@@ -84,10 +90,10 @@ function HomeV2() {
                   />
                 ) : (
                   <Button
+                    disabled={!fusion}
                     name={"Fusion"}
                     fn={() => {
                       setLoading(true);
-                      setApprove(false);
                       fusion();
                     }}
                   />
